@@ -1,0 +1,113 @@
+swagger: "2.0"
+info:
+  description: "Public Annotations API is a micro-service which aims to provides a service to GET all the annotations when given a content UUID, also obtain through separate endpoints v1 or v2 annotations"
+  version: "1.0.0"
+  title: "Public Annotations API"
+  termsOfService: "http://example.com/terms"
+  contact:
+    email: "example@example.com"
+  license:
+    name: "example"
+    url: "http://example.com/example"
+host: "xp-up.ft.com"
+basePath: "/__public-annotations-api/content"
+tags:
+- name: "annotations"
+  description: "V1 and V2 annotations for UUID"
+  externalDocs:
+    description: "Public Annotations API Dewey"
+    url: "https://dewey.ft.com/annotationsapi.html"
+schemes:
+- "https"
+securityDefinitions:
+  basicAuth:
+    type: basic
+paths:
+  /{uuid}/annotations:
+    get:
+      tags:
+      - "annotations"
+      summary: "Get all annotations for UUID"
+      description: "Get all annotations for UUID as JSON array"
+      operationId: "getAnnotations"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "uuid"
+        in: "path"
+        description: "Content ID"
+        required: true
+        type: "string"
+      security:
+      - basicAuth: []
+      responses:
+        200:
+          description: "Operation successful"
+          schema:
+            $ref: "#/definitions/Annotations"
+        401:
+          $ref: "#/responses/UnauthorizedError"
+        403:
+          description: "Access denied"
+        404:
+          description: "Not Found"
+        500:
+          description: "Internal Server Error"
+        503:
+          description: "Service Unavailable"
+  /{uuid}/annotations/{platformVersion}:
+    get:
+      tags:
+      - "annotations"
+      summary: "Get v1 annotations for UUID"
+      description: "Get v1 annotations for UUID as JSON array"
+      operationId: "getv1Annotations"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "uuid"
+        in: "path"
+        description: "Content ID"
+        required: true
+        type: "string"
+      - name: "platformVersion"
+        in: "path"
+        description: "V1, V2, video, etc"
+        required: true
+        type: "string"
+      security:
+      - basicAuth: []
+      responses:
+        200:
+          description: "Operation successful"
+          schema:
+            $ref: "#/definitions/Annotations"
+        401:
+          $ref: "#/responses/UnauthorizedError"
+        403:
+          description: "Access denied"
+        404:
+          description: "Not Found"
+        500:
+          description: "Internal Server Error"
+        503:
+          description: "Service Unavailable"
+definitions:
+  Annotations:
+    type: "object"
+    properties:
+      predicate:
+        type: "string"
+      id:
+        type: "string"
+      apiURL:
+        type: "string"
+      types:
+        type: "array"
+        items:
+          type: "string"
+      prefLabel:
+        type: "string"
+responses:
+    UnauthorizedError:
+      description: Authentication information is missing or invalid
