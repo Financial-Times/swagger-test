@@ -9,7 +9,6 @@ info:
   license:
     name: "example"
     url: "http://example.com/example"
-host: "xp-up.ft.com"
 basePath: "/__public-annotations-api/content"
 tags:
 - name: "annotations"
